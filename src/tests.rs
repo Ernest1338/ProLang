@@ -28,7 +28,7 @@ fn test_code(code: &str) -> bool {
             let result = Command::new("tcc")
                 .args(["-c", "-Werror", &tmp_file_name])
                 .output()
-                .expect("GCC execution failed")
+                .expect("TCC execution failed")
                 .status
                 .success();
             if result {
