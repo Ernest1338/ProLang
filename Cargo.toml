@@ -1,0 +1,9 @@
+[package]
+name = "pro-lang"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+pico-args-helpgen = { git = "https://github.com/Ernest1338/pico-args-helpgen" }
