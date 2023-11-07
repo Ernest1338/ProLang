@@ -17,7 +17,7 @@ fn print_help {
     () println
     () println "Options:"
     () println "____-h, --help___ - Display_this_help_screen"
-    () println "____-v, --version - Display_version_information"
+    () println "____-V, --version - Display_version_information"
 }
 
 fn main int argc char* argv[] > int {
