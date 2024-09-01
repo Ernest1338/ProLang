@@ -1,3 +1,5 @@
+#[allow(unused)]
+
 use crate::utils::{
     choose_compiler, debug, is_gcc_available, levenshtein_distance, syntax_error, SyntaxErrorType,
 };
@@ -213,7 +215,7 @@ pub fn compile(source_code: &str) -> String {
         let tokens: Vec<&str> = line.split_whitespace().collect();
         let tokens_len = tokens.len();
 
-        debug(&tokens);
+        // debug(&tokens);
 
         match tokens[0] {
             "fn" => {
@@ -228,7 +230,7 @@ pub fn compile(source_code: &str) -> String {
                 if tokens[tokens_len - 3] == ">" {
                     return_type = tokens[tokens_len - 2];
                 }
-                debug(&format!("RETURN TYPE: {return_type}"));
+                // debug(&format!("RETURN TYPE: {return_type}"));
 
                 let fn_name = tokens[1];
 
@@ -454,7 +456,7 @@ pub fn compile_to_file(source_file: String, output_file: String, release_build: 
     }
 
     let source_code = read_to_string(source_file.clone()).expect("Could not read source code file");
-    debug(&source_code);
+    // debug(&source_code);
     let compiled = compile(&source_code);
     let compiler_ir_fname = "compiler_ir.c";
 
