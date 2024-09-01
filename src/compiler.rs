@@ -173,10 +173,10 @@ fn handle_func_call(
 fn handle_imports(source_code: &str) -> String {
     let mut code_lines: Vec<String> = source_code.lines().map(|x| x.to_owned()).collect();
     for (i, line) in code_lines.iter_mut().enumerate() {
-        if let Some(first) = line.split_whitespace().nth(0) {
+        if let Some(first) = line.split_whitespace().next() {
             if first == "import" {
                 let path = line.split_whitespace().nth(1).unwrap();
-                *line = read_to_string(&path).unwrap_or_else(|_| {
+                *line = read_to_string(path).unwrap_or_else(|_| {
                     syntax_error(i, line, SyntaxErrorType::ImportNotFound, None);
                     String::new()
                 });
@@ -462,6 +462,7 @@ pub fn compile_to_file(source_file: String, output_file: String, release_build: 
 
     let mut compiled_file = OpenOptions::new()
         .create(true)
+        .truncate(true)
         .write(true)
         .open(compiler_ir_fname)
         .expect("Failed to open compiler IR file");
