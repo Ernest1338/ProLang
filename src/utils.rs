@@ -62,6 +62,7 @@ pub enum SyntaxErrorType {
     InvalidFunctionArguments,
     WrongNumOfArgs,
     StdLibFuncNoStd,
+    ImportNotFound,
 }
 
 pub fn syntax_error(
@@ -117,6 +118,9 @@ pub fn syntax_error(
         }
         SyntaxErrorType::WrongNumOfArgs => {
             syntax_error_line("Wrong ammount of arguments");
+        }
+        SyntaxErrorType::ImportNotFound => {
+            syntax_error_line("Import error: file not found");
         }
         _ => {
             msgs.push(format!(
