@@ -1,5 +1,7 @@
+import compiler.pro
 import cli.pro
 
 fn main int argc char* argv[] > int {
-    () handle_args argc argv
+    var int out () handle_args argc argv
+    ret out
 }
