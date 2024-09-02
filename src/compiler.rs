@@ -70,6 +70,39 @@ fn handle_func_call(
                 compiled.push_str(&format!("printf(\"{to_print}\");\n"));
             }
         }
+        "eprint" => {
+            let tmp = if tokens_len < 3 {
+                String::new()
+            } else {
+                // FIXME: not till the end but till the end of the string literal (so it will
+                // be possible to have multiple string literals on a single line)
+                tokens[2..tokens_len].join(" ")
+            };
+            let mut to_print = String::new();
+            for i in 0..tmp.len() {
+                let mut tmp_chars = tmp.chars();
+                if let Some(c) = tmp_chars.nth(i) {
+                    if c == '_' {
+                        if i != 0 && tmp_chars.nth(i - 1) == Some('\\') {
+                            to_print.push('_');
+                        } else {
+                            to_print.push(' ');
+                        }
+                    } else {
+                        to_print.push(c);
+                    }
+                }
+            }
+            if to_print.starts_with('\"') {
+                compiled.push_str(&format!("fprintf(stderr, {to_print});\n"));
+            } else if to_print.starts_with('%') {
+                let format_string = tokens[2];
+                let to_print = tokens[3..tokens_len].join(" ");
+                compiled.push_str(&format!("fprintf(stderr, \"{format_string}\", {to_print});\n"));
+            } else {
+                compiled.push_str(&format!("fprintf(stderr, \"{to_print}\");\n"));
+            }
+        }
         "println" => {
             let tmp = if tokens_len < 3 {
                 String::new()
@@ -103,6 +136,41 @@ fn handle_func_call(
                 compiled.push_str(&format!("printf(\"{format_string}\\n\", {to_print});\n"));
             } else {
                 compiled.push_str(&format!("printf(\"{to_print}\\n\");\n"));
+            }
+        }
+        "eprintln" => {
+            let tmp = if tokens_len < 3 {
+                String::new()
+            } else {
+                // FIXME: not till the end but till the end of the string literal (so it will
+                // be possible to have multiple string literals on a single line)
+                tokens[2..tokens_len].join(" ")
+            };
+            let mut to_print = String::new();
+            for i in 0..tmp.len() {
+                let mut tmp_chars = tmp.chars();
+                if let Some(c) = tmp_chars.nth(i) {
+                    if c == '_' {
+                        if i != 0 && tmp_chars.nth(i - 1) == Some('\\') {
+                            to_print.push('_');
+                        } else {
+                            to_print.push(' ');
+                        }
+                    } else {
+                        to_print.push(c);
+                    }
+                }
+            }
+
+            if to_print.starts_with('\"') {
+                to_print.pop();
+                compiled.push_str(&format!("fprintf(stderr, {to_print}\\n\");\n"));
+            } else if to_print.starts_with('%') {
+                let format_string = tokens[2];
+                let to_print = tokens[3..tokens_len].join(" ");
+                compiled.push_str(&format!("fprintf(stderr, \"{format_string}\\n\", {to_print});\n"));
+            } else {
+                compiled.push_str(&format!("fprintf(stderr, \"{to_print}\\n\");\n"));
             }
         }
         _ => {
