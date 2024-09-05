@@ -263,6 +263,7 @@ pub fn compile(source_code: &str) -> String {
         fn_decl("println", 0),
         fn_decl("helloworld", 0),
         fn_decl("initVecString", 1),
+        fn_decl("newVecString", 0),
         fn_decl("resizeVecString", 1),
         fn_decl("freeVecString", 1),
         fn_decl("pushVecString", 2),

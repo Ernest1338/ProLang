@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <ctype.h>
 
 typedef char* string;
 
@@ -19,6 +20,12 @@ void initVecString(VecString *vector) {
         fprintf(stderr, "Failed to allocate memory\n");
         exit(EXIT_FAILURE);
     }
+}
+
+VecString newVecString() {
+    VecString vector;
+    initVecString(&vector);
+    return vector;
 }
 
 void resizeVecString(VecString *vector) {
@@ -95,7 +102,7 @@ string stringTrim(const string str) {
         return NULL;
     }
 
-    const string start = str;
+    string start = str;
     while (isspace((unsigned char)*start)) {
         start++;
     }
@@ -110,7 +117,7 @@ string stringTrim(const string str) {
         return emptyStr;
     }
 
-    const string end = start + strlen(start) - 1;
+    string end = start + strlen(start) - 1;
     while (end > start && isspace((unsigned char)*end)) {
         end--;
     }

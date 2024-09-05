@@ -2,8 +2,7 @@ fn compile string input_file {
     () println "TODO compiler"
     () println %s input_file
 
-    var VecString stringvec
-    () initVecString &stringvec
+    var VecString stringvec () newVecString
 
     () pushVecString &stringvec "test1"
     () pushVecString &stringvec "test2"
