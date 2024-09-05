@@ -262,6 +262,16 @@ pub fn compile(source_code: &str) -> String {
         fn_decl("print", 0),
         fn_decl("println", 0),
         fn_decl("helloworld", 0),
+        fn_decl("initVecString", 1),
+        fn_decl("resizeVecString", 1),
+        fn_decl("freeVecString", 1),
+        fn_decl("pushVecString", 2),
+        fn_decl("getVecString", 2),
+        fn_decl("stringSplit", 2),
+        fn_decl("stringTrim", 1),
+        fn_decl("stringEmpty", 1),
+        fn_decl("readToString", 1),
+        fn_decl("readToLines", 1),
     ];
 
     let source_code = handle_imports(source_code);
