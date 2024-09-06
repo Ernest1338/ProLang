@@ -183,6 +183,19 @@ VecString readToLines(const string filename) {
     return stringSplit(fcontent, '\n');
 }
 
+VecString readToLinesNonEmpty(const string filename) {
+    string fcontent = readToString(filename);
+    VecString lines = stringSplit(fcontent, '\n');
+    VecString nonEmptyLines = newVecString();
+    for (int i=0; i<lines.size; i++) {
+        char* line = getVecString(&lines, i);
+        if (!stringEmpty(line)) {
+            pushVecString(&nonEmptyLines, line);
+        }
+    }
+    return nonEmptyLines;
+}
+
 void helloworld() {
     printf("Hello, World!\n");
 }

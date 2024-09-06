@@ -273,6 +273,7 @@ pub fn compile(source_code: &str) -> String {
         fn_decl("stringEmpty", 1),
         fn_decl("readToString", 1),
         fn_decl("readToLines", 1),
+        fn_decl("readToLinesNonEmpty", 1),
     ];
 
     let source_code = handle_imports(source_code);

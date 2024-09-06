@@ -29,4 +29,13 @@ fn compile string input_file {
         }
         ++ x
     }
+
+    var VecString compiler_lines_2 () readToLinesNonEmpty "main.pro"
+    = x 0
+    loop x < compiler_lines_2.size {
+        var string s () getVecString &compiler_lines_2 x
+        = s () stringTrim s
+        () println %s s
+        ++ x
+    }
 }
