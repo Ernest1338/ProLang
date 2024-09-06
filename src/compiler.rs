@@ -283,6 +283,7 @@ pub fn compile(source_code: &str) -> String {
         fn_decl("splitToLines", 1),
         fn_decl("joinVecString", 2),
         fn_decl("modVecString", 3),
+        fn_decl("djb2Hash", 1),
     ];
 
     let source_code = handle_imports(source_code);
