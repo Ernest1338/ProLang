@@ -1,5 +1,4 @@
 #[allow(unused)]
-
 use crate::utils::{
     choose_compiler, debug, is_gcc_available, levenshtein_distance, syntax_error, SyntaxErrorType,
 };
@@ -98,7 +97,9 @@ fn handle_func_call(
             } else if to_print.starts_with('%') {
                 let format_string = tokens[2];
                 let to_print = tokens[3..tokens_len].join(" ");
-                compiled.push_str(&format!("fprintf(stderr, \"{format_string}\", {to_print});\n"));
+                compiled.push_str(&format!(
+                    "fprintf(stderr, \"{format_string}\", {to_print});\n"
+                ));
             } else {
                 compiled.push_str(&format!("fprintf(stderr, \"{to_print}\");\n"));
             }
@@ -168,7 +169,9 @@ fn handle_func_call(
             } else if to_print.starts_with('%') {
                 let format_string = tokens[2];
                 let to_print = tokens[3..tokens_len].join(" ");
-                compiled.push_str(&format!("fprintf(stderr, \"{format_string}\\n\", {to_print});\n"));
+                compiled.push_str(&format!(
+                    "fprintf(stderr, \"{format_string}\\n\", {to_print});\n"
+                ));
             } else {
                 compiled.push_str(&format!("fprintf(stderr, \"{to_print}\\n\");\n"));
             }
@@ -244,10 +247,10 @@ fn handle_imports(source_code: &str) -> String {
         if let Some(first) = line.split_whitespace().next() {
             if first == "import" {
                 let path = line.split_whitespace().nth(1).unwrap();
-                *line = read_to_string(path).unwrap_or_else(|_| {
+                *line = handle_imports(&read_to_string(path).unwrap_or_else(|_| {
                     syntax_error(i, line, SyntaxErrorType::ImportNotFound, None);
                     String::new()
-                });
+                }));
             }
         }
     }
@@ -269,11 +272,17 @@ pub fn compile(source_code: &str) -> String {
         fn_decl("pushVecString", 2),
         fn_decl("getVecString", 2),
         fn_decl("stringSplit", 2),
+        fn_decl("stringSplitWhitespace", 1),
         fn_decl("stringTrim", 1),
         fn_decl("stringEmpty", 1),
         fn_decl("readToString", 1),
         fn_decl("readToLines", 1),
         fn_decl("readToLinesNonEmpty", 1),
+        fn_decl("stringCmp", 2),
+        fn_decl("strlen", 1),
+        fn_decl("splitToLines", 1),
+        fn_decl("joinVecString", 2),
+        fn_decl("modVecString", 3),
     ];
 
     let source_code = handle_imports(source_code);
@@ -435,6 +444,9 @@ pub fn compile(source_code: &str) -> String {
                     "return {};\n",
                     line.trim().replace("ret", "").trim()
                 ));
+            }
+            "continue" => {
+                compiled.push_str("continue;\n");
             }
             "if" => {
                 if tokens_len < 3 || tokens.last().unwrap() != &"{" {

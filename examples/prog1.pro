@@ -65,5 +65,42 @@ fn main > int {
     () print "bar = "
     () println %d bar
 
+    var VecString stringvec () newVecString
+
+    () pushVecString &stringvec "test1"
+    () pushVecString &stringvec "test2"
+    () pushVecString &stringvec "test3"
+
+    var string s1 () getVecString &stringvec 0
+    () println %s s1
+
+    var int i 0
+    loop i < stringvec.size {
+        var string s () getVecString &stringvec i
+        () println %s s
+        ++ i
+    }
+
+    var VecString compiler_lines () readToLines "helloworld.pro"
+    var int x 0
+    loop x < compiler_lines.size {
+        var string s () getVecString &compiler_lines x
+        = s () stringTrim s
+        var bool empty () stringEmpty s
+        if !empty {
+            () println %s s
+        }
+        ++ x
+    }
+
+    var VecString compiler_lines_2 () readToLinesNonEmpty "helloworld.pro"
+    = x 0
+    loop x < compiler_lines_2.size {
+        var string s () getVecString &compiler_lines_2 x
+        = s () stringTrim s
+        () println %s s
+        ++ x
+    }
+
     ret 0
 }

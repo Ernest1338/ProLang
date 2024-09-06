@@ -1,3 +1,5 @@
+import compiler.pro
+
 var string app_name "ProLang"
 var string app_version "v0.1.0"
 var string out_filename "out.app"
