@@ -1,11 +1,12 @@
 #[allow(unused)]
 use crate::utils::{
-    choose_compiler, debug, is_gcc_available, levenshtein_distance, syntax_error, SyntaxErrorType,
+    choose_compiler, cli_info, debug, djb2_hash, is_gcc_available, levenshtein_distance,
+    syntax_error, SyntaxErrorType,
 };
 
 use std::{
-    fs::{read_to_string, remove_file, OpenOptions},
-    io::Write,
+    fs::{exists, read_to_string, remove_file, File, OpenOptions},
+    io::{Read, Seek, SeekFrom, Write},
     process::{exit, Command},
     str::from_utf8,
 };
@@ -286,8 +287,6 @@ pub fn compile(source_code: &str) -> String {
         fn_decl("djb2Hash", 1),
     ];
 
-    let source_code = handle_imports(source_code);
-
     let mut declared_functions: Vec<FunctionDeclaration> = Vec::new();
 
     for (line_nr, line) in source_code.lines().enumerate() {
@@ -539,6 +538,23 @@ pub fn compile(source_code: &str) -> String {
 }
 
 pub fn compile_to_file(source_file: String, output_file: String, release_build: bool) {
+    let source_code =
+        handle_imports(&read_to_string(source_file).expect("Could not read source code file"));
+    // debug(&source_code);
+    let source_code_hash = &djb2_hash(&source_code).to_be_bytes();
+
+    // check if source code hash is different than the current source code
+    if exists(&output_file).unwrap() {
+        let mut f = File::open(&output_file).unwrap();
+        let mut buf = vec![0u8; 14];
+        f.read_exact(&mut buf).unwrap();
+        let bin_hash = &buf[10..14];
+        if bin_hash == source_code_hash {
+            cli_info("No change detected. No recompilation needed.");
+            return;
+        }
+    }
+
     let compiler = choose_compiler();
     let gcc_available = is_gcc_available();
 
@@ -548,8 +564,6 @@ pub fn compile_to_file(source_file: String, output_file: String, release_build: 
         exit(103);
     }
 
-    let source_code = read_to_string(source_file.clone()).expect("Could not read source code file");
-    // debug(&source_code);
     let compiled = compile(&source_code);
     let compiler_ir_fname = "compiler_ir.c";
 
@@ -609,4 +623,13 @@ pub fn compile_to_file(source_file: String, output_file: String, release_build: 
 
     // remove the temporary compiler IR file
     remove_file(compiler_ir_fname).expect("Failed to remove compiler IR file");
+
+    // write source code hash to out binary elf header
+    let mut f = OpenOptions::new()
+        .read(true)
+        .write(true)
+        .open(&output_file)
+        .unwrap();
+    f.seek(SeekFrom::Start(10)).unwrap();
+    f.write_all(source_code_hash).unwrap();
 }

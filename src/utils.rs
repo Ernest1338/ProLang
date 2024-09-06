@@ -267,6 +267,14 @@ pub fn levenshtein_distance(a: &str, b: &str) -> usize {
     matrix[a_len][b_len]
 }
 
+pub fn djb2_hash(s: &str) -> u32 {
+    let mut hash: u32 = 5381;
+    for c in s.chars() {
+        hash = (hash.wrapping_mul(33)) ^ c as u32;
+    }
+    hash
+}
+
 #[allow(unused)]
 pub fn rand_num() -> usize {
     let mut out: usize = 0;
