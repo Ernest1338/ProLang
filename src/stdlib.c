@@ -225,7 +225,7 @@ bool stringCmp(const string str1, const string str2) {
 ulong djb2Hash(const string str) {
     unsigned long hash = 5381;
     for (int i=0; i<strlen(str); i++) {
-        hash = (hash * 33) ^ str[i];
+        hash = ((hash << 5) + hash) ^ str[i];
     }
     return hash;
 }
