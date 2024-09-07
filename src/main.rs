@@ -32,7 +32,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         compile_to_file(file, args.out, args.release);
         let end = start.elapsed();
 
-        cli_info(&format!("Compiliation finished in {}s", end.as_secs_f64()));
+        cli_info(&format!("Compiliation finished in {:.3}s", end.as_secs_f64()));
     } else if let Some(file) = args.run {
         cli_info(&format!(
             "Compiling and running {file}{}",
@@ -43,7 +43,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         compile_to_file(file, args.out.clone(), args.release);
         let end = start.elapsed();
 
-        cli_info(&format!("Compiliation finished in {}s", end.as_secs_f64()));
+        cli_info(&format!("Compiliation finished in {:.3}s", end.as_secs_f64()));
         cli_info("Running the compiled binary");
 
         Command::new(format!("./{}", args.out))
