@@ -6,7 +6,7 @@ mod utils;
 
 use crate::{
     compiler::compile_to_file,
-    utils::{cli_info, DEBUG},
+    utils::{cli_info, DEBUG, choose_compiler},
 };
 
 use std::{
@@ -24,8 +24,9 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     if let Some(file) = args.compile {
         cli_info(&format!(
-            "Compiling {file}{}",
-            if args.release { " in release mode" } else { "" }
+            "Compiling {file}{} using {}",
+            if args.release { " in release mode" } else { "" },
+            choose_compiler()
         ));
 
         let start = Instant::now();
@@ -35,8 +36,9 @@ fn main() -> Result<(), Box<dyn Error>> {
         cli_info(&format!("Compiliation finished in {:.3}s", end.as_secs_f64()));
     } else if let Some(file) = args.run {
         cli_info(&format!(
-            "Compiling and running {file}{}",
-            if args.release { " in release mode" } else { "" }
+            "Compiling and running {file}{} using {}",
+            if args.release { " in release mode" } else { "" },
+            choose_compiler()
         ));
 
         let start = Instant::now();
