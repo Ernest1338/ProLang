@@ -69,6 +69,32 @@ void freeVecString(VecString *vector) {
     free(vector->data);
 }
 
+VecString getArgsVec(int argc, char* argv[]) {
+    VecString args = newVecString();
+    for (int i=0; i<argc; i++) {
+        pushVecString(&args, argv[i]);
+    }
+    return args;
+}
+
+bool containsVecString(VecString *vector, const string s) {
+    for (int i=0; i<vector->size; i++) {
+        if (strcmp(vector->data[i], s) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+int findVecString(VecString *vector, const string s) {
+    for (int i=0; i<vector->size; i++) {
+        if (strcmp(vector->data[i], s) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 string joinVecString(VecString *vector, const char delim) {
     if (vector->size == 0) {
         string emptyStr = malloc(1);

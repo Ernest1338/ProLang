@@ -285,6 +285,9 @@ pub fn compile(source_code: &str) -> String {
         fn_decl("joinVecString", 2),
         fn_decl("modVecString", 3),
         fn_decl("djb2Hash", 1),
+        fn_decl("getArgsVec", 2),
+        fn_decl("containsVecString", 2),
+        fn_decl("findVecString", 2),
     ];
 
     let mut declared_functions: Vec<FunctionDeclaration> = Vec::new();

@@ -1,8 +1,8 @@
-import compiler.pro
-
 var string app_name "ProLang"
 var string app_version "v0.1.0"
 var string out_filename "out.app"
+
+import compiler.pro
 
 fn print_version {
     () print %s app_name
@@ -29,37 +29,62 @@ fn print_help {
 }
 
 fn handle_args int argc char* argv[] > int {
-    // FIXME: not if argv[1] is something but if argv CONTAINS something
+    var VecString args () getArgsVec argc argv
 
-    if argc == 1 || strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0 {
+    var bool ddhelp () containsVecString &args "--help"
+    var bool dh () containsVecString &args "-h"
+    if argc == 1 || ddhelp || dh {
         () print_help
         ret 0
     }
 
-    if strcmp(argv[1], "-V") == 0 || strcmp(argv[1], "--version") == 0 {
+    var bool ddversion () containsVecString &args "--version"
+    var bool dV () containsVecString &args "-V"
+    if ddversion || dV {
         () print_version
         ret 0
     }
 
-    // if strcmp(argv[1], "-o") == 0 || strcmp(argv[1], "--out") == 0 {
-    //     if argc < 3 {
-    //         () eprintln "ERROR: output file not provided"
-    //         ret 1
-    //     }
-    //     = out_filename argv[2]
-    // }
+    var bool ddout () containsVecString &args "--out"
+    var bool dout () containsVecString &args "-o"
+    if ddout || dout {
+        if argc < 3 {
+            () eprintln "ERROR: output file not provided"
+            ret 1
+        }
+        if ddout {
+            var int x () findVecString &args "--out"
+            = out_filename () getVecString &args x+1
+        }
+        if dout {
+            var int x () findVecString &args "-o"
+            = out_filename () getVecString &args x+1
+        }
+    }
 
-    if strcmp(argv[1], "-c") == 0 || strcmp(argv[1], "--compile") == 0  {
+    var bool ddcompile () containsVecString &args "--compile"
+    var bool dc () containsVecString &args "-c"
+    if ddcompile || dc {
         if argc < 3 {
             () eprintln "ERROR: input file not provided"
             ret 1
         }
 
-        var string input_file argv[2]
+        var string input_file ""
+        if ddcompile {
+            var int x () findVecString &args "--compile"
+            = input_file () getVecString &args x+1
+        }
+        if dc {
+            var int x () findVecString &args "-c"
+            = input_file () getVecString &args x+1
+        }
         () compile input_file
 
         ret 0
     }
 
-    ret 0
+    () eprintln "ERROR: Unknown option"
+    () eprintln "Check the help page using --help"
+    ret 1
 }
