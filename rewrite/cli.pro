@@ -1,8 +1,10 @@
 var string app_name "ProLang"
 var string app_version "v0.1.0"
-var string out_filename "out.app"
+var string output_file "out.app"
+var bool release_mode false
 
 import compiler.pro
+import utils.pro
 
 fn print_version {
     () print %s app_name
@@ -54,29 +56,37 @@ fn handle_args int argc char* argv[] > int {
         }
         if ddout {
             var int x () findVecString &args "--out"
-            = out_filename () getVecString &args x+1
+            = output_file () getVecString &args x+1
         }
         if dout {
             var int x () findVecString &args "-o"
-            = out_filename () getVecString &args x+1
+            = output_file () getVecString &args x+1
         }
+    }
+
+    var bool ddrelease () containsVecString &args "--release"
+    if ddrelease {
+        = release_mode true
     }
 
     var bool ddcompile () containsVecString &args "--compile"
     var bool dc () containsVecString &args "-c"
     if ddcompile || dc {
-        if argc < 3 {
-            () eprintln "ERROR: input file not provided"
-            ret 1
-        }
-
         var string input_file ""
         if ddcompile {
             var int x () findVecString &args "--compile"
+            if argc <= x+1 {
+                () eprintln "ERROR: input file not provided"
+                ret 1
+            }
             = input_file () getVecString &args x+1
         }
         if dc {
             var int x () findVecString &args "-c"
+            if argc <= x+1 {
+                () eprintln "ERROR: input file not provided"
+                ret 1
+            }
             = input_file () getVecString &args x+1
         }
         () compile input_file
@@ -84,7 +94,33 @@ fn handle_args int argc char* argv[] > int {
         ret 0
     }
 
-    () eprintln "ERROR: Unknown option"
+    var bool ddrun () containsVecString &args "--run"
+    var bool dr () containsVecString &args "-r"
+    if ddrun || dr {
+        var string input_file ""
+        if ddrun {
+            var int x () findVecString &args "--run"
+            if argc <= x+1 {
+                () eprintln "ERROR: input file not provided"
+                ret 1
+            }
+            = input_file () getVecString &args x+1
+        }
+        if dr {
+            var int x () findVecString &args "-r"
+            if argc <= x+1 {
+                () eprintln "ERROR: input file not provided"
+                ret 1
+            }
+            = input_file () getVecString &args x+1
+        }
+        () compile input_file
+        () run output_file
+
+        ret 0
+    }
+
+    () eprintln "ERROR: incorrect usage"
     () eprintln "Check the help page using --help"
     ret 1
 }
