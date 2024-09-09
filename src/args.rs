@@ -11,6 +11,8 @@ pico_args_helpgen::define_app! {
         run: Option<String>, "-r, --run", "[file] Compile and run given file",
         out: String, "-o, --out", "[file] Output file",
         release: bool, "--release", "Enable release mode builds (using GCC)",
+        force: bool, "--force", "Force recompilation even if change was not detected",
+        test: bool, "-t, --test", "Run tests from tests.pro file",
     }
 }
 
@@ -26,6 +28,8 @@ fn parse_args() -> Result<AppArgs, pico_args_helpgen::Error> {
             .value_from_str(["-o", "--out"])
             .unwrap_or("out.app".to_string()),
         release: pargs.contains("--release"),
+        force: pargs.contains("--force"),
+        test: pargs.contains(["-t", "--test"]),
     };
 
     let remaining = pargs.finish();

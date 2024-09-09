@@ -2,6 +2,7 @@ var string app_name "ProLang"
 var string app_version "v0.1.0"
 var string output_file "out.app"
 var bool release_mode false
+var bool force_recompilation false
 
 import compiler.pro
 import utils.pro
@@ -25,6 +26,7 @@ fn print_help {
     () println "\t-r, --run\t [file] - Compile and run given file"
     () println "\t-o, --out\t [file] - Output file"
     () println "\t--release\t\t- Enable release mode builds (using GCC)"
+    () println "\t--force\t\t\t- Force recompilation even if change was not detected"
     () println
     () println "\t-h, --help\t\t- Display this help screen"
     () println "\t-V, --version\t\t- Display version information"
@@ -67,6 +69,11 @@ fn handle_args int argc char* argv[] > int {
     var bool ddrelease () containsVecString &args "--release"
     if ddrelease {
         = release_mode true
+    }
+
+    var bool ddforce () containsVecString &args "--force"
+    if ddforce {
+        = force_recompilation true
     }
 
     var bool ddcompile () containsVecString &args "--compile"

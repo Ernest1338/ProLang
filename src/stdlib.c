@@ -315,6 +315,33 @@ VecString splitToLines(const string str) {
     return stringSplit(str, '\n');
 }
 
+void runBinary(const string filename) {
+    // FIXME: unsafe
+    char cmd[100];
+    sprintf(cmd, "./%s", filename);
+    system(cmd);
+}
+
+void test(void (*f)(), const string name) {
+    printf("[TEST] %s", name);
+    f();
+    printf(" PASSED\n");
+}
+
+void assertInt(int i1, int i2) {
+    if (i1 != i2) {
+        fprintf(stderr, "INT ASSERT FAILED: %i != %i\n", i1, i2);
+        exit(1);
+    }
+}
+
+void assertString(string s1, string s2) {
+    if (strcmp(s1, s2) != 0) {
+        fprintf(stderr, "STRING ASSERT FAILED: \"%s\" != \"%s\"\n", s1, s2);
+        exit(1);
+    }
+}
+
 void helloworld() {
     printf("Hello, World!\n");
 }

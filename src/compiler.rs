@@ -288,6 +288,10 @@ pub fn compile(source_code: &str) -> String {
         fn_decl("getArgsVec", 2),
         fn_decl("containsVecString", 2),
         fn_decl("findVecString", 2),
+        fn_decl("runBinary", 1),
+        fn_decl("assertInt", 2),
+        fn_decl("assertString", 2),
+        fn_decl("test", 2),
     ];
 
     let mut declared_functions: Vec<FunctionDeclaration> = Vec::new();
@@ -540,14 +544,16 @@ pub fn compile(source_code: &str) -> String {
     }
 }
 
-pub fn compile_to_file(source_file: String, output_file: String, release_build: bool) {
-    let source_code =
-        handle_imports(&read_to_string(source_file).expect("Could not read source code file"));
+pub fn compile_to_file(source_file: String, output_file: String, release_build: bool, force: bool) {
+    let source_code = handle_imports(&read_to_string(source_file.clone()).unwrap_or_else(|_| {
+        eprintln!("ERROR: Could not read source code file: {source_file}");
+        exit(1);
+    }));
     // debug(&source_code);
     let source_code_hash = &djb2_hash(&source_code).to_be_bytes();
 
     // check if source code hash is different than the current source code
-    if exists(&output_file).unwrap() {
+    if !force && exists(&output_file).unwrap() {
         let mut f = File::open(&output_file).unwrap();
         let mut buf = vec![0u8; 14];
         f.read_exact(&mut buf).unwrap();

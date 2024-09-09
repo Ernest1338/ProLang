@@ -1,4 +1,8 @@
 fn run string filename {
-    () println "RUNNING THE BINARY"
-    // TODO
+    () runBinary filename
+}
+
+// FIXME remove me
+fn testme > int {
+    ret 0
 }

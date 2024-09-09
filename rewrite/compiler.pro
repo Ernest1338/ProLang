@@ -7,11 +7,11 @@ fn compile string input_file {
 
     var VecString code_lines () splitToLines source_code
 
-    () println "source_code:"
-    var int i 0
-    loop i < code_lines.size {
-        var string line () getVecString &code_lines i
-        () println %s line
-        ++ i
-    }
+    // () println "source_code:"
+    // var int i 0
+    // loop i < code_lines.size {
+    //     var string line () getVecString &code_lines i
+    //     () println %s line
+    //     ++ i
+    // }
 }
