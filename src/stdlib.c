@@ -316,16 +316,19 @@ VecString splitToLines(const string str) {
 }
 
 void runBinary(const string filename) {
-    // FIXME: unsafe
+    // FIXME: unsafe (command injection)
     char cmd[100];
     sprintf(cmd, "./%s", filename);
     system(cmd);
 }
 
+int passed_tests = 0;
+
 void test(void (*f)(), const string name) {
     printf("[TEST] %s", name);
     f();
     printf(" PASSED\n");
+    passed_tests++;
 }
 
 void assertInt(int i1, int i2) {

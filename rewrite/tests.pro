@@ -7,4 +7,8 @@ fn t_testme {
 
 fn main {
     () test t_testme "testme"
+
+    () print "\nPassed all ["
+    () print %i passed_tests
+    () println "] tests."
 }
